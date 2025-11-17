@@ -90,13 +90,13 @@
 
   // Funktion til at vælge den korrekte kommentar baseret på antal dage
   function getRetirementComment(days) {
-    if (days > 365) return "Hæng på, det kommer, det kommer ...";
+    if (days > 365) return "Hæng på, det kommer ...";
     if (days >= 305) return "Mindre en et år nu!";
     if (days >= 245) return "Godt på vej, du!";
     if (days >= 185) return "Det går godt fremad ...";
-    if (days >= 125) return "Nu begynder det at blive interessant!";
+    if (days >= 125) return "Nu bliver det interessant!";
     if (days >= 65) return "På vej ind i opløbssvinget!";
-    if (days >= 30) return "Lige op over!";
+    if (days >= 30) return "Målstregen er i sigte!";
     if (days >= 1) return "Mindre end en måned!";
     return "Bølge! Skål! Hurrah!"; // Dækker 0 og negative dage
   }
