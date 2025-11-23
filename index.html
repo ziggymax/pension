@@ -75,11 +75,10 @@
 </div>
 
 <script>
-  // Funktion til at beregne forskellen i hele dage mellem to datoer
+  // Funktion til at beregne forskellen i hele dage
   function daysUntil(targetDate) {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Nulstil tiden for præcis dagstælling
-
+    today.setHours(0, 0, 0, 0);
     const target = new Date(targetDate);
     target.setHours(0, 0, 0, 0);
 
@@ -88,40 +87,135 @@
     return Math.ceil(differenceMs / ONE_DAY_MS);
   }
 
-  // Funktion til at vælge den korrekte kommentar baseret på antal dage
-  function getRetirementComment(days) {
-    if (days > 365) return "Hæng på, det kommer ...";
-    if (days >= 305) return "Mindre end et år nu!";
-    if (days >= 245) return "Godt på vej, du!";
-    if (days >= 185) return "Det går godt fremad ...";
-    if (days >= 125) return "Nu bliver det interessant!";
-    if (days >= 65) return "På vej ind i opløbssvinget!";
-    if (days >= 30) return "Målstregen er i sigte!";
-    if (days >= 1) return "Mindre end en måned!";
-    return "Bølge! Skål! Hurrah!"; // Dækker 0 og negative dage
+  // Funktion til at beregne hele, resterende kalendermåneder
+  function calculateRealMonthsUntil(targetDate) {
+      const today = new Date();
+      const target = new Date(targetDate);
+
+      let yearDiff = target.getFullYear() - today.getFullYear();
+      let monthDiff = target.getMonth() - today.getMonth();
+
+      let totalMonths = yearDiff * 12 + monthDiff;
+
+      // Korriger, hvis vi ikke har nået dagen i måneden endnu
+      if (target.getDate() < today.getDate()) {
+          totalMonths--;
+      }
+      
+      // Sikrer, at vi ikke returnerer et negativt tal
+      return Math.max(0, totalMonths);
   }
+
+  // Kommentarer baseret på måneder (kaldes når der er 1 eller flere måneder tilbage)
+  function getRetirementCommentMonths(months) {
+    switch (months) {
+      case 1:  return "EN MÅNED TILBAGE! Nu er det lige op over!";
+      case 2:  return "TO MÅNEDER! Kan du høre frihedsklokkerne?";
+      case 3:  return "TRE MÅNEDER! Nu er det for alvor i sigte!";
+      case 4:  return "Fire måneder. Som et helt forår tilbragt i forventning!";
+      case 5:  return "Fem måneder. Mindre end en håndfuld tilbage!";
+      case 6:  return "ET HALVT ÅR! Tydeligt lys forude!";
+      case 7:  return "Syv måneder. Et heldigt tal for en heldig fremtid!";
+      case 8:  return "Otte måneder. Det er jo bare to tredjedele af et år.";
+      case 9:  return "Ni måneder - nu kan du tælle på to hænder og have en finger fri!";
+      case 10: return "Ti måneder. Nu kan vi tælle på to hænder!";
+      case 11: return "Elleve måneder. Nedtællingen er for alvor i gang.";
+      case 12: return "ET ÅR IGEN! Nu er det officielt sidste omgang!";
+      case 13: return "Tretten måneder. Snart kun et enkelt år tilbage!";
+      case 14: return "Fjorten måneder. Det går støt den rigtige vej.";
+      case 15: return "Femten måneder. Et kvartal af det sidste halvandet år er gået!";
+      case 16: return "Seksten måneder. Tid til at begynde at lave planer?";
+      case 17: return "Sytten måneder. Snart kan du mærke duften af frihed.";
+      case 18: return "Halvandet år igen. Lige til at overskue.";
+      case 19: return "Nitten måneder... Det er da ikke meget, vel?";
+      case 20: return "Tyve små måneder. Det er mindre end to år!";
+      case 21: return "Enogtyve måneder. Det er til at forholde sig til.";
+      case 22: return "Toogtyve måneder. Stadig to fødselsdage, men vi nærmer os!";
+      case 23: return "Treogtyve måneder... Nu begynder vi for alvor at tælle ned!";
+      default: // Dækker 24 måneder og derover
+        return "Hæng på, et par år fra eller til, prffft ...";
+    }
+  }
+
+  // Kommentarer baseret på dage (kaldes når der er mindre end 1 måned tilbage)
+  function getRetirementCommentDays(days) {
+    if (days <= 0) return "Bølge! Skål! Hurrah!";
+      switch (days) {
+        case 1: return "SIDSTE DAG! I morgen sker det!";
+        case 2: return "Kun to dage! Næsten i mål!";
+        case 3: return "Tre små dage tilbage på pinden.";
+        case 4: return "Fire dage! Kan du mærke det?";
+        case 5: return "Fem dage! En arbejdsuge fra friheden!";
+        case 6: return "Seks dage... Sidste weekend før den store dag!";
+        case 7: return "EN UGE IGEN! Syv dage til et nyt kapitel!";
+        case 8: return "Otte dage. Tæl dem på fingrene!";
+        case 9: return "Ni dage. Snart er det encifret!";
+        case 10: return "TI DAGE! Nu er det den endelige nedtælling!";
+        case 11: return "Elleve dage. Det er jo ingenting!";
+        case 12: return "Tolv dage. Et dusin dage til pension.";
+        case 13: return "Tretten dage. Held og lykke med de sidste ryk!";
+        case 14: return "TO UGER! Lige præcis fjorten dage tilbage!";
+        case 15: return "Femten dage. Halvvejs gennem den sidste måned!";
+        case 16: return "Seksten dage. Nu går det stærkt.";
+        case 17: return "Sytten dage. Husk at rydde skrivebordet!";
+        case 18: return "Atten dage. Det er kun tre uger á seks dage.";
+        case 19: return "Nitten dage. Nu begynder det at føles virkeligt.";
+        case 20: return "TYVE DAGE! Det kan overskues!";
+        case 21: return "Enogtyve dage. Tre uger til den store finale.";
+        case 22: return "Toogtyve dage. Bare rolig, tiden flyver herfra.";
+        case 23: return "Treogtyve dage. Næsten i mål.";
+        case 24: return "Fireogtyve dage. Som en julekalender til frihed.";
+        case 25: return "Femogtyve dage. Det er snart tid til at fejre!";
+        case 26: return "Seksogtyve dage. Hold ud, du er der næsten!";
+        case 27: return "Syvogtyve dage. Et lille skridt hver dag.";
+        case 28: return "Otteogtyve dage. Fire uger tilbage!";
+        case 29: return "Niogtyve dage. Vi er inde i den sidste måned!";
+        case 30: return "TREDIVE DAGE! Sidste måned er skudt i gang!";
+        default: return "Nu tæller vi for alvor ned i dage!";
+      }
+  }
+
+  // ---- HOVEDLOGIK ----
 
   // Sæt pensionsdatoerne
   const steensPensionDate = '2026-09-30';
   const evasPensionDate = '2027-06-30';
 
-  // Beregn antal dage til pension
+  // Beregn både dage og måneder til pension med det samme
   const daysToSteen = daysUntil(steensPensionDate);
+  const monthsToSteen = calculateRealMonthsUntil(steensPensionDate);
+  
   const daysToEva = daysUntil(evasPensionDate);
-
-  // Vælg den tekst/emoji, der skal vises for selve tælleren
+  const monthsToEva = calculateRealMonthsUntil(evasPensionDate);
+  
+  // Vælg display-tekst for selve tælleren (tal eller emoji)
   const steenDisplayText = daysToSteen <= 0 ? "😊" : daysToSteen;
   const evaDisplayText = daysToEva <= 0 ? "😊" : daysToEva;
 
-  // Hent de dynamiske kommentarer
-  const steenCommentText = getRetirementComment(daysToSteen);
-  const evaCommentText = getRetirementComment(daysToEva);
+  // Bestem hvilken kommentar der skal vises baseret på antallet af måneder
+  let steenCommentText, evaCommentText;
 
-  // Opdater HTML-elementerne med tæller-værdier
+  // Logik for Steens kommentar
+  if (monthsToSteen < 1) {
+    // Hvis der er 0 måneder tilbage, er vi i den sidste måned -> brug dags-tælleren
+    steenCommentText = getRetirementCommentDays(daysToSteen);
+  } else {
+    // Ellers, brug måneds-tælleren
+    steenCommentText = getRetirementCommentMonths(monthsToSteen);
+  }
+
+  // Logik for Evas kommentar
+  if (monthsToEva < 1) {
+    // Hvis der er 0 måneder tilbage, er vi i den sidste måned -> brug dags-tælleren
+    evaCommentText = getRetirementCommentDays(daysToEva);
+  } else {
+    // Ellers, brug måneds-tælleren
+    evaCommentText = getRetirementCommentMonths(monthsToEva);
+  }
+  
+  // Opdater HTML-elementerne
   document.getElementById('counter1').innerHTML += steenDisplayText;
   document.getElementById('counter2').innerHTML += evaDisplayText;
-
-  // Opdater HTML-elementerne med kommentarer
   document.getElementById('comment1').innerText = steenCommentText;
   document.getElementById('comment2').innerText = evaCommentText;
 </script>
